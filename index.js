@@ -11,6 +11,8 @@ let inpt2 = inputs[1];
 let rates = {}
 let requestURL = "https://api.exchangerate.host/latest?base=USD";
 
+fetchRates();
+
 async function fetchRates(){
     let res = await fetch(requestURL);
     res = await res.json();
@@ -33,3 +35,45 @@ function convert(val, fromCurr,toCurr){
     return v1 == 0.0 ? v.toFixed(5) : v1;
 }
 
+function displayRate(){
+    let v1 = sel1.value;
+    let v2 = sel2.value;
+
+    let val = convert(1,v1,v2);
+
+    rate1.innerHTML = `1 ${v1} equals`;
+    rate2.innerHTML = `${val} S{v2}`;
+
+
+}
+
+resultBtn.addEventListener("Click", () =>{
+    let fromCurr = sel1.value;
+    let fromVal = parseFloat(inpt1.value);
+    let toCurr = sel2.value;
+
+    if(isNaN(fromVal)){
+        alert("Enter a number");
+
+    }else{
+        let cVal = convert(fromVal, fromCurr, toCurr);
+        inpt2.value = cVal;
+    }
+});
+
+selects.forEach(s =>s.addEventListener("change",displayRate));
+
+document.querySelector(".swap").addEventListener("click", () =>{
+    let in1 = inpt1.value;
+    let in2 = inpt2.value;
+    let op1 = sel1.value;
+    let op2 = sel2.value;
+
+    inpt2.value = in1;
+    inpt1.value = in2;
+
+    sel2.value = op1;
+    sel1.value = op2;
+
+    displayRate();
+})
